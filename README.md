@@ -1,13 +1,10 @@
 # kickstart.nvim
 
 ## Introduction
-remove stuff
 
 rm -rf ~/.local/share/nvim/
 
 rm -rf ~/.config/nvim/
-
-install/update neovim
 
 sudo apt update
 
@@ -24,8 +21,6 @@ sudo chmod a+rX /opt/nvim-linux-x86_64
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
 sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/
-
-clone kickstart
 
 git clone https://github.com/smekisen/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 
