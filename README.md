@@ -2,7 +2,7 @@
 
 ## Introduction
 remove stuff
-rm -rf ~/.local/share/nvim/
+rm -rf ~/.local/share/nvim/ \n
 rm -rf ~/.config/nvim/
 
 install/update neovim
