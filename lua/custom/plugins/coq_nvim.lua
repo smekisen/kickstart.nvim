@@ -20,7 +20,9 @@ return {
   init = function()
     vim.g.coq_settings = {
       auto_start = 'shut-up', -- if you want to start COQ at startup
-      -- Your COQ settings here
+      keymap = {
+        jump_to_mark = 'null',
+      },
     }
   end,
   config = function()
