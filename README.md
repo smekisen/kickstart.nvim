@@ -2,23 +2,31 @@
 
 ## Introduction
 remove stuff
+
 rm -rf ~/.local/share/nvim/
 
 rm -rf ~/.config/nvim/
 
 install/update neovim
+
 sudo apt update
+
 sudo apt install make gcc ripgrep unzip git xclip curl
 
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+
 sudo rm -rf /opt/nvim-linux-x86_64
+
 sudo mkdir -p /opt/nvim-linux-x86_64
+
 sudo chmod a+rX /opt/nvim-linux-x86_64
+
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
 sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/
 
 clone kickstart
+
 git clone https://github.com/smekisen/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 
 A starting point for Neovim that is:
