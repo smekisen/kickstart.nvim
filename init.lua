@@ -2,6 +2,8 @@
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
 vim.g.maplocalleader = ' '
 vim.keymap.del('n', '<C-w><C-d>')
 vim.g.skip_loading_mswin = true
@@ -22,7 +24,7 @@ vim.o.relativenumber = true
 vim.o.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
-vim.o.showmode = true
+vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -36,6 +38,13 @@ end)
 vim.o.breakindent = true
 
 -- Save undo history
+vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
+vim.opt.shellcmdflag =
+  '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
+vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+vim.opt.shellquote = ''
+vim.opt.shellxquote = ''
 vim.o.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
@@ -167,6 +176,13 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  -- {
+  --   'ray-x/lsp_signature.nvim',
+  --   event = 'InsertEnter',
+  --   opts = {
+  --     -- cfg options
+  --   },
+  -- },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -601,7 +617,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
+        --   cmd = { 'clangd', 'query-driver=/C:\\ProgramData\\mingw64\\mingw64\\bin\\gcc.exe' },
+        -- },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -648,6 +666,14 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      -- local lspconfig = require 'lspconfig'
+      -- lspconfig.clangd.setup {
+      --   -- cmd = { 'clangd', 'query-driver=/C:\\ProgramData\\mingw64\\mingw64\\bin\\gcc.exe' },
+      --   cmd = { 'clangd', '--background-index', '--clang-tidy', '--log=verbose' },
+      --   init_options = {
+      --     fallbackFlags = { '-std=c++17' },
+      --   },
+      -- }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
@@ -709,6 +735,7 @@ require('lazy').setup({
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
+    build = 'cargo +nightly build --release',
     -- enabled = false,
     version = '1.*',
     dependencies = {
@@ -743,8 +770,26 @@ require('lazy').setup({
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
+
       keymap = {
         -- 'default' (recommended) for mappings similar to built-in completions
+        preset = 'default',
+        ['<ESC>'] = { 'hide', 'fallback' },
+        ['<CR>'] = { 'accept', 'fallback' },
+        ['<Tab>'] = {
+          function(cmp)
+            return cmp.select_next()
+          end,
+          'snippet_forward',
+          'fallback',
+        },
+        ['<S-Tab>'] = {
+          function(cmp)
+            return cmp.select_prev()
+          end,
+          'snippet_backward',
+          'fallback',
+        },
         --   <c-y> to accept ([y]es) the completion.
         --    This will auto-import if your LSP supports it.
         --    This will expand snippets if the LSP sent a snippet.
@@ -760,12 +805,7 @@ require('lazy').setup({
         -- All presets have the following mappings:
         -- <tab>/<s-tab>: move to right/left of your snippet expansion
         -- <c-space>: Open menu or open docs if already open
-        -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
-        -- <c-e>: Hide menu
-        -- <c-k>: Toggle signature help
-        --
-        -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        -- <c-n>/<c-p> or <up>-- ['<C-,>'] = { 'show', 'show_documentation', 'hide_documentation' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -779,6 +819,12 @@ require('lazy').setup({
 
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
+        list = {
+          selection = {
+            preselect = false,
+            -- auto_insert = true,
+          },
+        },
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
@@ -847,6 +893,7 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+      require('mini.tabline').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -903,8 +950,8 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
@@ -913,7 +960,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -940,6 +987,46 @@ require('lazy').setup({
     },
   },
 })
-
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+-- require('lspconfig').clangd.setup {}
+
+-- local function custom_attach(client, bufnr)
+--   require('lsp_signature').on_attach {
+--     bind = true,
+--     use_lspsaga = false,
+--     floating_window = true,
+--     fix_pos = true,
+--     hint_enable = true,
+--     hi_parameter = 'Search',
+--     handler_opts = { 'double' },
+--   }
+-- end
+
+local ahk2_configs = {
+  autostart = true,
+  cmd = {
+    'node',
+    vim.fn.expand 'C:/dev/vscode-autohotkey2-lsp/server/dist/server.js',
+    '--stdio',
+  },
+  filetypes = { 'ahk', 'autohotkey', 'ah2' },
+  -- CommentTags = '^;;\\s*(?<tag>.+)',
+  init_options = {
+    locale = 'en-us',
+    InterpreterPath = 'C:/Program Files/AutoHotkey/v2/AutoHotkey.exe',
+    -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
+  },
+  single_file_support = true,
+  flags = { debounce_text_changes = 500 },
+  -- capabilities = capabilities,
+  -- on_attach = custom_attach,
+}
+local configs = require 'lspconfig.configs'
+configs['ahk2'] = { default_config = ahk2_configs }
+local nvim_lsp = require 'lspconfig'
+nvim_lsp.ahk2.setup {}
+vim.notify = require 'notify'
+vim.diagnostic.config {
+  virtual_text = false,
+}
