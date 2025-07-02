@@ -1,6 +1,7 @@
 return {
   'doctorfree/cheatsheet.nvim',
   event = 'VeryLazy',
+  lazy = true,
   dependencies = {
     { 'nvim-telescope/telescope.nvim' },
     { 'nvim-lua/popup.nvim' },

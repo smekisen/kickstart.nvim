@@ -8,7 +8,9 @@ vim.g.maplocalleader = ' '
 vim.keymap.del('n', '<C-w><C-d>')
 vim.g.skip_loading_mswin = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
+--
 vim.g.have_nerd_font = true
+vim.o.autochdir = true
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -274,6 +276,11 @@ require('lazy').setup({
           F10 = '<F10>',
           F11 = '<F11>',
           F12 = '<F12>',
+          -- '<leader>1',
+          -- function()
+          --   require('which-key').show { global = false }
+          -- end,
+          -- desc = 'Buffer Local Keymaps (which-key)',
         },
       },
 
@@ -294,6 +301,7 @@ require('lazy').setup({
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
+    lazy = true,
     event = 'VimEnter',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -382,7 +390,14 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
+      --     ignore_current_buffer = true,
+      -- vim.keymap.set('n', '<leader>b', function()
+      --   require('telescope.builtin').buffers {
+      --     sort_mru = true,
+      --     ignore_current_buffer = true,
+      --     show_all_buffers = false,
+      --   }
+      -- end)
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -424,6 +439,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -734,6 +750,7 @@ require('lazy').setup({
 
   { -- Autocompletion
     'saghen/blink.cmp',
+    lazy = true,
     event = 'VimEnter',
     build = 'cargo +nightly build --release',
     -- enabled = false,
@@ -774,7 +791,7 @@ require('lazy').setup({
       keymap = {
         -- 'default' (recommended) for mappings similar to built-in completions
         preset = 'default',
-        ['<ESC>'] = { 'hide', 'fallback' },
+        -- ['<ESC>'] = { 'hide', 'fallback' },
         ['<CR>'] = { 'accept', 'fallback' },
         ['<Tab>'] = {
           function(cmp)
@@ -844,7 +861,7 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
@@ -893,7 +910,6 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-      require('mini.tabline').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -916,6 +932,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    -- lazy = true,
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -1030,3 +1047,4 @@ vim.notify = require 'notify'
 vim.diagnostic.config {
   virtual_text = false,
 }
+vim.diagnostic.config { virtual_lines = true }

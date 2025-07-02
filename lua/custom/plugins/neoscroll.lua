@@ -1,4 +1,7 @@
 return {
   'karb94/neoscroll.nvim',
-  opts = {},
+  enabled = not vim.g.neovide,
+  opts = {
+    duration_multiplier = 0.33,
+  },
 }
