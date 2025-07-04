@@ -4,6 +4,7 @@ return {
   -- enabled = false,
   config = function()
     require('dashboard').setup {
+      -- shortcut_type = 'number',
       -- config
     }
   end,

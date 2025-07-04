@@ -10,6 +10,7 @@ vim.g.skip_loading_mswin = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 --
 vim.g.have_nerd_font = true
+vim.o.guifont = 'BlexMono Nerd Font:h12'
 vim.o.autochdir = true
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -124,6 +125,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<leader>bn', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
+vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<cr>', { desc = 'Previous Buffer' })
 -- vim.keymap.nnoremap <C-h> <C-w>h
 -- vim.nnoremap <C-j> <C-w>j
 -- vim.nnoremap <C-k> <C-w>k
@@ -287,6 +291,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>s', group = '[S]earch' },
+        { '<leader>b', group = '[B]uffer' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -1031,7 +1036,7 @@ local ahk2_configs = {
   -- CommentTags = '^;;\\s*(?<tag>.+)',
   init_options = {
     locale = 'en-us',
-    InterpreterPath = 'C:/Program Files/AutoHotkey/v2/AutoHotkey.exe',
+    InterpreterPath = 'C:\\Users\\smekis\\scoop\\apps\\autohotkey\\2.0.19\\v2\\AutoHotkey64.exe',
     -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
   },
   single_file_support = true,
