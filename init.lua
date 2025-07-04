@@ -643,7 +643,6 @@ require('lazy').setup({
         --   cmd = { 'clangd', 'query-driver=/C:\\ProgramData\\mingw64\\mingw64\\bin\\gcc.exe' },
         -- },
         pyright = {
-          filetypes = { 'json' },
           settings = {
             python = {
               analysis = {
