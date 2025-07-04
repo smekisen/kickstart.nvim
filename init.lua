@@ -639,10 +639,20 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
+
         --   cmd = { 'clangd', 'query-driver=/C:\\ProgramData\\mingw64\\mingw64\\bin\\gcc.exe' },
         -- },
+        pyright = {
+          filetypes = { 'json' },
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = 'off',
+              },
+            },
+          },
+        },
         -- gopls = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1025,31 +1035,32 @@ require('lazy').setup({
 --   }
 -- end
 
-local ahk2_configs = {
-  autostart = true,
-  cmd = {
-    'node',
-    vim.fn.expand 'C:/dev/vscode-autohotkey2-lsp/server/dist/server.js',
-    '--stdio',
-  },
-  filetypes = { 'ahk', 'autohotkey', 'ah2' },
-  -- CommentTags = '^;;\\s*(?<tag>.+)',
-  init_options = {
-    locale = 'en-us',
-    InterpreterPath = 'C:\\Users\\smekis\\scoop\\apps\\autohotkey\\2.0.19\\v2\\AutoHotkey64.exe',
-    -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
-  },
-  single_file_support = true,
-  flags = { debounce_text_changes = 500 },
-  -- capabilities = capabilities,
-  -- on_attach = custom_attach,
-}
-local configs = require 'lspconfig.configs'
-configs['ahk2'] = { default_config = ahk2_configs }
-local nvim_lsp = require 'lspconfig'
-nvim_lsp.ahk2.setup {}
+-- local ahk2_configs = {
+--   autostart = true,
+--   cmd = {
+--     'node',
+--     vim.fn.expand 'C:/dev/vscode-autohotkey2-lsp/server/dist/server.js',
+--     '--stdio',
+--   },
+--   filetypes = { 'ahk', 'autohotkey', 'ah2' },
+--   -- CommentTags = '^;;\\s*(?<tag>.+)',
+--   init_options = {
+--     locale = 'en-us',
+--     InterpreterPath = 'C:\\Users\\smekis\\scoop\\apps\\autohotkey\\2.0.19\\v2\\AutoHotkey64.exe',
+--     -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
+--   },
+--   single_file_support = true,
+--   flags = { debounce_text_changes = 500 },
+--   -- capabilities = capabilities,
+--   -- on_attach = custom_attach,
+-- }
+-- local configs = require 'lspconfig.configs'
+-- configs['ahk2'] = { default_config = ahk2_configs }
+-- local nvim_lsp = require 'lspconfig'
+-- nvim_lsp.ahk2.setup {}
 vim.notify = require 'notify'
 vim.diagnostic.config {
   virtual_text = false,
 }
 vim.diagnostic.config { virtual_lines = true }
+vim.lsp.enable 'autohotkey_lsp'
