@@ -28,6 +28,7 @@ vim.o.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
+-- vim.o.sidescroll = 5
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -82,7 +83,7 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+-- vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -306,7 +307,6 @@ require('lazy').setup({
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    lazy = true,
     event = 'VimEnter',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -444,7 +444,6 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -642,15 +641,6 @@ require('lazy').setup({
 
         --   cmd = { 'clangd', 'query-driver=/C:\\ProgramData\\mingw64\\mingw64\\bin\\gcc.exe' },
         -- },
-        pyright = {
-          settings = {
-            python = {
-              analysis = {
-                typeCheckingMode = 'off',
-              },
-            },
-          },
-        },
         -- gopls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -661,6 +651,16 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        --
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = 'off',
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },
@@ -706,6 +706,16 @@ require('lazy').setup({
       -- }
 
       require('mason-lspconfig').setup {
+        require('lspconfig')['pyright'].setup {
+          capabilities = capabilities,
+          settings = {
+            python = {
+              analysis = {
+                -- typeCheckingMode = 'off',
+              },
+            },
+          },
+        },
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
@@ -764,7 +774,6 @@ require('lazy').setup({
 
   { -- Autocompletion
     'saghen/blink.cmp',
-    lazy = true,
     event = 'VimEnter',
     build = 'cargo +nightly build --release',
     -- enabled = false,
@@ -857,7 +866,7 @@ require('lazy').setup({
           },
         },
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'lazydev' },
@@ -892,6 +901,7 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('gruvbox').setup {
+        transparent_mode = true,
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
@@ -1034,32 +1044,32 @@ require('lazy').setup({
 --   }
 -- end
 
--- local ahk2_configs = {
---   autostart = true,
---   cmd = {
---     'node',
---     vim.fn.expand 'C:/dev/vscode-autohotkey2-lsp/server/dist/server.js',
---     '--stdio',
---   },
---   filetypes = { 'ahk', 'autohotkey', 'ah2' },
---   -- CommentTags = '^;;\\s*(?<tag>.+)',
---   init_options = {
---     locale = 'en-us',
---     InterpreterPath = 'C:\\Users\\smekis\\scoop\\apps\\autohotkey\\2.0.19\\v2\\AutoHotkey64.exe',
---     -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
---   },
---   single_file_support = true,
---   flags = { debounce_text_changes = 500 },
---   -- capabilities = capabilities,
---   -- on_attach = custom_attach,
--- }
--- local configs = require 'lspconfig.configs'
--- configs['ahk2'] = { default_config = ahk2_configs }
--- local nvim_lsp = require 'lspconfig'
--- nvim_lsp.ahk2.setup {}
-vim.notify = require 'notify'
-vim.diagnostic.config {
-  virtual_text = false,
+local ahk2_configs = {
+  autostart = true,
+  cmd = {
+    'node',
+    vim.fn.expand 'C:/dev/vscode-autohotkey2-lsp/server/dist/server.js',
+    '--stdio',
+  },
+  filetypes = { 'ahk', 'autohotkey', 'ah2' },
+  -- CommentTags = '^;;\\s*(?<tag>.+)',
+  init_options = {
+    locale = 'en-us',
+    InterpreterPath = 'C:\\Users\\smekis\\scoop\\apps\\autohotkey\\2.0.19\\v2\\AutoHotkey64.exe',
+    -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
+  },
+  single_file_support = true,
+  flags = { debounce_text_changes = 500 },
+  -- capabilities = capabilities,
+  -- on_attach = custom_attach,
 }
-vim.diagnostic.config { virtual_lines = true }
-vim.lsp.enable 'autohotkey_lsp'
+local configs = require 'lspconfig.configs'
+configs['ahk2'] = { default_config = ahk2_configs }
+local nvim_lsp = require 'lspconfig'
+nvim_lsp.ahk2.setup {}
+vim.notify = require 'notify'
+-- vim.diagnostic.config {
+--   virtual_text = false,
+-- }
+-- If using the above, then `python3 -m debugpy --version`
+-- must work in the shell- vim.diagnostic.config { virtual_lines = true }
