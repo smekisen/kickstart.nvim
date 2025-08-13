@@ -1,17 +1,23 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be usedk)k
 vim.g.mapleader = ' '
+vim.o.wrap = false
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.g.maplocalleader = ' '
-vim.keymap.del('n', '<C-w><C-d>')
+-- vim.keymap.del('n', '<C-w><C-d>')
 vim.g.skip_loading_mswin = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 --
 vim.g.have_nerd_font = true
 vim.o.guifont = 'BlexMono Nerd Font:h12'
-vim.o.autochdir = true
+vim.g.neovide_window_blurred = true
+
+vim.g.neovide_opacity = 0.8
+
+vim.g.neovide_normal_opacity = 0.8
+-- vim.o.autochdir = true
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -34,9 +40,10 @@ vim.o.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+
+-- vim.schedule(function()
+--   vim.o.clipboard = 'unnamedplus'
+-- end)
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -110,12 +117,29 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
+vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to system clipboard' })
+vim.keymap.set('n', 'gp', '"+p', { desc = 'Paste from system clipboard' })
+vim.keymap.set('x', 'gp', '"+P', { desc = 'Paste from system clipboard' })
+vim.keymap.set('x', 'gp', '"+P', { desc = 'Paste from system clipboard' })
+vim.keymap.set('n', '<C-Left>', '"<Cmd>vertical resize +" . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Decrease window width' })
+vim.keymap.set('n', '<C-Down>', '"<Cmd>resize +"          . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Decrease window height' })
+vim.keymap.set('n', '<C-Up>', '"<Cmd>resize -"          . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Increase window height' })
+vim.keymap.set('n', '<C-Right>', '"<Cmd>vertical resize -" . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Increase window width' })
+vim.keymap.set('c', '<M-h>', '<Left>', { silent = false, desc = 'Left' })
+vim.keymap.set('c', '<M-l>', '<Right>', { silent = false, desc = 'Right' })
+vim.keymap.set('i', '<M-h>', '<Left>', { noremap = false, desc = 'Left' })
+vim.keymap.set('i', '<M-j>', '<Down>', { noremap = false, desc = 'Down' })
+vim.keymap.set('i', '<M-k>', '<Up>', { noremap = false, desc = 'Up' })
+vim.keymap.set('i', '<M-l>', '<Right>', { noremap = false, desc = 'Right' })
+vim.keymap.set('t', '<M-h>', '<Left>', { desc = 'Left' })
+vim.keymap.set('t', '<M-j>', '<Down>', { desc = 'Down' })
+vim.keymap.set('t', '<M-k>', '<Up>', { desc = 'Up' })
+vim.keymap.set('t', '<M-l>', '<Right>', { desc = 'Right' })
 -- TIP: Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+-- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+-- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+-- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- vim.keymap.del('n', '<C-h>')
 -- Keybinds to make split navigation easier.
@@ -126,13 +150,71 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('n', '<leader>bn', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
-vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
-vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<cr>', { desc = 'Previous Buffer' })
+-- vim.keymap.set('n', '<leader>bn', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+-- vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
+-- vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<cr>', { desc = 'Previous Buffer' })
 -- vim.keymap.nnoremap <C-h> <C-w>h
 -- vim.nnoremap <C-j> <C-w>j
 -- vim.nnoremap <C-k> <C-w>k
 -- vim.nnoremap <C-l> <C-w>l
+--
+local map = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+
+-- Move to previous/next
+map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
+map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
+
+-- Re-order to previous/next
+map('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+map('n', '<A->>', '<Cmd>BufferMoveNext<CR>', opts)
+
+-- Goto buffer in position...
+map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
+map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
+map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
+map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
+map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
+map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
+map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
+map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
+map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
+map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+
+-- Pin/unpin buffer
+map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
+
+-- Goto pinned/unpinned buffer
+--                 :BufferGotoPinned
+--                 :BufferGotoUnpinned
+
+-- Close buffer
+map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
+
+-- Wipeout buffer
+--                 :BufferWipeout
+
+-- Close commands
+--                 :BufferCloseAllButCurrent
+--                 :BufferCloseAllButPinned
+--                 :BufferCloseAllButCurrentOrPinned
+--                 :BufferCloseBuffersLeft
+--                 :BufferCloseBuffersRight
+
+-- Magic buffer-picking mode
+map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
+map('n', '<C-s-p>', '<Cmd>BufferPickDelete<CR>', opts)
+
+-- Sort automatically by...
+map('n', '<Leader>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+map('n', '<Leader>bn', '<Cmd>BufferOrderByName<CR>', opts)
+map('n', '<Leader>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+map('n', '<Leader>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+map('n', '<Leader>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+
+-- Other:
+-- :BarbarEnable - enables barbar (enabled by default)
+-- :BarbarDisable - very bad command, should never be used
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -706,16 +788,16 @@ require('lazy').setup({
       -- }
 
       require('mason-lspconfig').setup {
-        require('lspconfig')['pyright'].setup {
-          capabilities = capabilities,
-          settings = {
-            python = {
-              analysis = {
-                -- typeCheckingMode = 'off',
-              },
-            },
-          },
-        },
+        -- require('lspconfig')['pyright'].setup {
+        --   capabilities = capabilities,
+        --   settings = {
+        --     python = {
+        --       analysis = {
+        --         -- typeCheckingMode = 'off',
+        --       },
+        --     },
+        --   },
+        -- },
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
@@ -934,6 +1016,7 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       -- require('mini.surround').setup()
+      require('mini.cursorword').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -1073,4 +1156,3 @@ vim.notify = require 'notify'
 -- }
 -- If using the above, then `python3 -m debugpy --version`
 -- must work in the shell- vim.diagnostic.config { virtual_lines = true }
---
